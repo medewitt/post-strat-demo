@@ -12,6 +12,8 @@ library(dplyr)
 library(ggplot2)
 library(survey)
 library(cowplot)
+library(gridExtra)
+library(gridGraphics)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -199,6 +201,12 @@ output$all_charts <- renderPlot({
 
 output$result_table <- renderTable(
     make_metrics()
+)
+
+output$alt_output <- renderPlot(
+
+    plot_grid(make_population_chart(), tableGrob(make_metrics(), rows = NULL), 
+              make_sample_chart(), make_ps_chart() %>% recordPlot(), nrow = 2)
 )
 
 })

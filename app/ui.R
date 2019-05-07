@@ -88,7 +88,9 @@ shinydashboard::dashboardPage(skin = "yellow",
                                                       tabPanel(title = "Combined",
                                                                plotOutput("all_charts")),
                                                       tabPanel(title = "Table",
-                                                               tableOutput("result_table"))
+                                                               tableOutput("result_table")),
+                                                      tabPanel(title = "Crazy",
+                                                               plotOutput("alt_output"))
                                                #   )
                                               ,
                                               
