@@ -174,10 +174,11 @@ make_all_chart <- function(){
     lines(density(sample_data()$score, col=rgb(1,0,0,1/4)), col = "red")
     abline(v = mean(population_data()$score), lwd = 3, col = "blue")
     abline(v = mean(sample_data()$score), lwd = 3, lty = 2, col = "red")
-    abline(v = ps_values[1], lwd = 3, lty = 3, col = "goldenrod")
+    abline(v = ps_values[1], lwd = 4, lty = 3, col = "goldenrod")
     legend("topleft", 
            legend = c("Population", "Unweighted Sample", "Post-Stratified"),
            lty=c(1,2,3),
+           lwd = c(2,2,2),
            col = c("blue", "red", "goldenrod"),  box.lty=0, text.font=2)
 }
 
