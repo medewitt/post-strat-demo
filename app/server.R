@@ -15,6 +15,8 @@ library(cowplot)
 library(gridExtra)
 library(gridGraphics)
 
+SE <- function(x) {sd(x)/sqrt(sum(!is.na(x)))}
+
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
@@ -138,12 +140,12 @@ make_ps_chart <- function(){
 make_metrics <- function(){
     true_values <- population_data() %>% 
         summarise(mean = mean(score),
-                  SE = sd(score)) %>% 
+                  SE = SE(score)) %>% 
         mutate(id = "Population") 
     
     sample_values <- sample_data() %>% 
         summarise(mean = mean(score),
-                  SE = sd(score)) %>% 
+                  SE = SE(score)) %>% 
             mutate(id = "Unweighted Sample")
     
     ps_values <- svymean(~score, ps_sample_data()) %>% 
@@ -169,17 +171,25 @@ make_all_chart <- function(){
     
     ps_values <- svymean(~score, ps_sample_data())
     
+    pop_mean <-mean(population_data()$score)
+    samp_mean <- mean(sample_data()$score)
+        
+    
     svyhist(~score, ps_sample_data(), breaks = 30, main = "Combined Results", xlim = c(0,80), freq = FALSE)
     lines(density(population_data()$score, col=rgb(0,0,1,1/4)), col = "blue")
     lines(density(sample_data()$score, col=rgb(1,0,0,1/4)), col = "red")
-    abline(v = mean(population_data()$score), lwd = 3, col = "blue")
-    abline(v = mean(sample_data()$score), lwd = 3, lty = 2, col = "red")
+    abline(v = mean(pop_mean), lwd = 3, col = "blue")
+    abline(v = mean(samp_mean), lwd = 3, lty = 2, col = "red")
     abline(v = ps_values[1], lwd = 4, lty = 3, col = "goldenrod")
-    legend("topleft", 
+    legend("topright", 
            legend = c("Population", "Unweighted Sample", "Post-Stratified"),
            lty=c(1,2,3),
            lwd = c(2,2,2),
-           col = c("blue", "red", "goldenrod"),  box.lty=0, text.font=2)
+           col = c("blue", "red", "goldenrod"),  box.lty=0, text.font=3, cex = 2)
+    text(x = 1, y = 0.025, labels = paste0("The difference between the true value\n and the unweighted sample is ", 
+                                           round( pop_mean-samp_mean,.1), "\n vs a difference of ",
+                                           round( pop_mean -ps_values[[1]],1), "\nwith the post-stratified values"), cex = 1.5,
+         adj = c(0,0))
 }
 
 # Render Chart Outputs
