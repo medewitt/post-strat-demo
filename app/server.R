@@ -182,7 +182,7 @@ make_all_chart <- function(){
     abline(v = mean(samp_mean), lwd = 3, lty = 2, col = "red")
     abline(v = ps_values[1], lwd = 4, lty = 3, col = "goldenrod")
     legend("topright", 
-           legend = c("Population", "Unweighted Sample", "Post-Stratified"),
+           legend = c("Population", "Unweighted Sample", "Post-Stratified"), title = "Averages",
            lty=c(1,2,3),
            lwd = c(2,2,2),
            col = c("blue", "red", "goldenrod"),  box.lty=0, text.font=3, cex = 2)
